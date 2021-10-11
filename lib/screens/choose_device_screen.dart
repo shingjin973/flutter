@@ -7,7 +7,8 @@ class ChooseDeviceScreen extends StatefulWidget {
 }
 
 enum CoffeeMachine { FrenchPress, DripMachine }
-CoffeeMachine _machine = CoffeeMachine.FrenchPress;
+CoffeeMachine _machine;
+bool isEnable = false;
 
 class _ChooseDeviceScreenState extends State<ChooseDeviceScreen> {
   @override
@@ -44,6 +45,7 @@ class _ChooseDeviceScreenState extends State<ChooseDeviceScreen> {
                   onChanged: (CoffeeMachine value) {
                     setState(() {
                       _machine = value;
+                      isEnable = true;
                     });
                   },
                 ),
@@ -66,6 +68,7 @@ class _ChooseDeviceScreenState extends State<ChooseDeviceScreen> {
                     onChanged: (CoffeeMachine value) {
                       setState(() {
                         _machine = value;
+                        isEnable = true;
                       });
                     },
                   ),
@@ -82,13 +85,14 @@ class _ChooseDeviceScreenState extends State<ChooseDeviceScreen> {
                       borderRadius: (BorderRadius.circular(20))),
                   padding: EdgeInsets.only(left: 80, right: 80),
                   color: Color.fromRGBO(76, 116, 139, 100),
-                  onPressed: () {
-                    Navigator.push(
+                  onPressed: isEnable == true ? () {
+
+                      Navigator.push(
                       context,
                       MaterialPageRoute(
                           builder: (context) => ChooseCupsScreen()),
                     );
-                  },
+                  } : null,
                 ),
               )
             ]),
@@ -109,6 +113,9 @@ var _coffee;
 final cupsCon = new TextEditingController();
 
 class _ChooseCupsScreenState extends State<ChooseCupsScreen> {
+
+  bool _isFilled = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -157,6 +164,17 @@ class _ChooseCupsScreenState extends State<ChooseCupsScreen> {
                                   width: 1.0),
                             ),
                           ),
+                          onChanged: (value) {
+                            if (value.length <= 0) {
+                              setState(() {
+                                _isFilled = false;
+                              });
+                            } else {
+                              setState(() {
+                                _isFilled = true;
+                              });
+                            }
+                          },
                         ),
                       ),
                     ),
@@ -172,8 +190,9 @@ class _ChooseCupsScreenState extends State<ChooseCupsScreen> {
                             borderRadius: (BorderRadius.circular(20))),
                         padding: EdgeInsets.only(left: 80, right: 80),
                         color: Color.fromRGBO(76, 116, 139, 100),
-                        onPressed: () {
+                        onPressed: _isFilled==false ? null : () {
                           _cups = cupsCon.text;
+                          cupsCon.clear();
 
                           Navigator.push(
                             context,
